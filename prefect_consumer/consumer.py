@@ -1,4 +1,5 @@
 import argparse
+from pprint import pformat
 
 from prefect import Client
 
@@ -37,10 +38,12 @@ if __name__ == "__main__":
     args = get_arg_parser().parse_args()
 
     bootstrap_servers, security_config = parse_bluesky_kafka_config_file(config_file_path=args.kafka_config_file)
+    print(f"bootstrap_servers:\n{pformat(bootstrap_servers)}")
+    print(f"security_config:\n{pformat(security_config)}")
 
     consumer_config = {"auto.offset.reset": "latest"}
-
     consumer_config.update(security_config)
+    print(f"consumer_config:\n{pformat(consumer_config)}")
 
     document_to_workflow_dispatcher = RemoteDispatcher(
         topics=[f"{args.beamline_name}.bluesky.runengine.documents"],
@@ -55,11 +58,14 @@ if __name__ == "__main__":
         def run_flow_on_stop_document(doc_name, doc):
             if doc_name == DocumentNames.stop:
                 # kick off a Prefect workflow
+                print(f"stop document:\n{pformat(doc)}")
+                print(f"run flow {args.flow_id}")
                 prefect_client = Client()
                 prefect_client.create_flow_run(
                     flow_id=args.flow_id, flow_run_name=start_doc["uid"], parameters={"stop": doc}
                 )
             else:
+                print(doc_name)
                 pass
 
         return [run_flow_on_stop_document], []
@@ -68,6 +74,7 @@ if __name__ == "__main__":
 
     document_to_workflow_dispatcher.subscribe(workflow_router)
 
+    print("start the dispatcher")
     document_to_workflow_dispatcher.start()
 
     print("all done")

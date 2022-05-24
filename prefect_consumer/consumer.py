@@ -64,7 +64,7 @@ if __name__ == "__main__":
                 create_flow_run.run(
                     flow_name=args.flow_id,
                     project_name=args.prefect_project_name,
-                    parameters={"start_doc": start_doc, "stop_doc": doc},
+                    parameters={"stop_doc": doc},
                 )
             else:
                 print(doc_name)

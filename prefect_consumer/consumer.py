@@ -12,6 +12,7 @@ def get_arg_parser():
     arg_parser = argparse.ArgumentParser(description="Run a Prefect workflow in response to a Kafka message.")
     arg_parser.add_argument("beamline_name")
     arg_parser.add_argument("flow_id")
+    arg_parser.add_argument("prefect_project_name")
     arg_parser.add_argument("--kafka-config-file", required=False, default="/etc/bluesky/kafka.yml")
     return arg_parser
 
@@ -59,11 +60,11 @@ if __name__ == "__main__":
             if doc_name == "stop":
                 # kick off a Prefect workflow
                 print(f"stop document:\n{pformat(doc)}")
-                print(f"run flow {args.flow_id}")
+                print(f"run flow {args.flow_id} from Prefect project {args.prefect_project_name}")
                 create_flow_run.run(
                     flow_name=args.flow_id,
-                    project_name="TST",
-                    parameters={"stop": doc}
+                    project_name=args.prefect_project_name,
+                    parameters={"start_doc": start_doc, "stop_doc": doc},
                 )
             else:
                 print(doc_name)

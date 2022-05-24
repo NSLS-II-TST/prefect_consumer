@@ -28,7 +28,7 @@ def parse_bluesky_kafka_config_file(config_file_path):
     #   in /etc/bluesky/kafka.yml
     security_config = {
         k: raw_bluesky_kafka_config["runengine_producer_config"][k]
-        for k in ("security.protocol", "sasl.mechanism", "sasl.username", "sasl.password", "ssl.ca.location")
+        for k in ("security.protocol", "sasl.mechanisms", "sasl.username", "sasl.password", "ssl.ca.location")
     }
 
     return bootstrap_servers, security_config

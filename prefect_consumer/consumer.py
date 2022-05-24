@@ -1,7 +1,7 @@
 import argparse
 from pprint import pformat
 
-from prefect import Client
+from prefect.tasks.prefect import create_flow_run
 
 from bluesky_kafka import RemoteDispatcher
 from event_model import DocumentNames, RunRouter
@@ -60,9 +60,10 @@ if __name__ == "__main__":
                 # kick off a Prefect workflow
                 print(f"stop document:\n{pformat(doc)}")
                 print(f"run flow {args.flow_id}")
-                prefect_client = Client()
-                prefect_client.create_flow_run(
-                    flow_id=args.flow_id, parameters={"stop": doc}
+                create_flow_run.run(
+                    flow_name=args.flow_id,
+                    project_name="TST",
+                    parameters={"stop": doc}
                 )
             else:
                 print(doc_name)

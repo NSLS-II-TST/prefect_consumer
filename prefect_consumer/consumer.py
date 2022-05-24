@@ -56,13 +56,13 @@ if __name__ == "__main__":
         print(f"start uid: {start_doc['uid']}")
 
         def run_flow_on_stop_document(doc_name, doc):
-            if doc_name == DocumentNames.stop:
+            if doc_name == "stop":
                 # kick off a Prefect workflow
                 print(f"stop document:\n{pformat(doc)}")
                 print(f"run flow {args.flow_id}")
                 prefect_client = Client()
                 prefect_client.create_flow_run(
-                    flow_id=args.flow_id, flow_run_name=start_doc["uid"], parameters={"stop": doc}
+                    flow_id=args.flow_id, parameters={"stop": doc}
                 )
             else:
                 print(doc_name)

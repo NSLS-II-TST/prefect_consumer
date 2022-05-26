@@ -4,7 +4,7 @@ from pprint import pformat
 from prefect.tasks.prefect import create_flow_run
 
 from bluesky_kafka import RemoteDispatcher
-from event_model import DocumentNames, RunRouter
+from event_model import RunRouter
 from nslsii import _read_bluesky_kafka_config_file
 
 

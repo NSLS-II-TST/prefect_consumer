@@ -10,14 +10,16 @@ def test_config_file_arg():
     with pytest.raises(SystemExit):
         arg_parser.parse_args()
 
-    args = arg_parser.parse_args(["tst", "7cc167d3-737d-4187-85d8-d5e5a75fbd93"])
+    args = arg_parser.parse_args(["tst", "a-prefect-flow-name", "a-prefect-project-name"])
     assert args.beamline_name == "tst"
-    assert args.flow_id == "7cc167d3-737d-4187-85d8-d5e5a75fbd93"
+    assert args.flow_id == "a-prefect-flow-name"
+    assert args.prefect_project_name == "a-prefect-project-name"
     assert args.kafka_config_file == "/etc/bluesky/kafka.yml"
 
     args = arg_parser.parse_args(
-        ["tst", "7cc167d3-737d-4187-85d8-d5e5a75fbd93", "--kafka-config-file", "/etc/bluesky/another_kafka.yml"]
+        ["tst", "a-prefect-flow-name", "a-prefect-project-name", "--kafka-config-file", "/etc/bluesky/another_kafka.yml"]
     )
     assert args.beamline_name == "tst"
-    assert args.flow_id == "7cc167d3-737d-4187-85d8-d5e5a75fbd93"
+    assert args.flow_id == "a-prefect-flow-name"
+    assert args.prefect_project_name == "a-prefect-project-name"
     assert args.kafka_config_file == "/etc/bluesky/another_kafka.yml"

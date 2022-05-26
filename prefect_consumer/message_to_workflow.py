@@ -82,46 +82,4 @@ def message_to_workflow():
 
 
 if __name__ == "__main__":
-    args = get_arg_parser().parse_args()
-
-    bootstrap_servers, security_config = parse_bluesky_kafka_config_file(config_file_path=args.kafka_config_file)
-    print(f"bootstrap_servers:\n{pformat(bootstrap_servers)}")
-
-    consumer_config = {"auto.offset.reset": "latest"}
-    consumer_config.update(security_config)
-    #print(f"consumer_config:\n{pformat(consumer_config)}")
-
-    document_to_workflow_dispatcher = RemoteDispatcher(
-        topics=[f"{args.beamline_name}.bluesky.runengine.documents"],
-        bootstrap_servers=bootstrap_servers,
-        group_id=f"{args.beamline_name}-workflow",
-        consumer_config=consumer_config,
-    )
-
-    def consumer_factory(start_doc_name, start_doc):
-        print(f"start uid: {start_doc['uid']}")
-
-        def run_flow_on_stop_document(doc_name, doc):
-            if doc_name == "stop":
-                # kick off a Prefect workflow
-                print(f"stop document:\n{pformat(doc)}")
-                print(f"run flow {args.flow_id} from Prefect project {args.prefect_project_name}")
-                create_flow_run.run(
-                    flow_name=args.flow_id,
-                    project_name=args.prefect_project_name,
-                    parameters={"stop_doc": doc},
-                )
-            else:
-                print(doc_name)
-                pass
-
-        return [run_flow_on_stop_document], []
-
-    workflow_router = RunRouter(factories=[consumer_factory])
-
-    document_to_workflow_dispatcher.subscribe(workflow_router)
-
-    print("start the dispatcher")
-    document_to_workflow_dispatcher.start()
-
-    print("all done")
+    message_to_workflow()

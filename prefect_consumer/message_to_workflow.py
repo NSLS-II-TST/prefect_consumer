@@ -40,11 +40,10 @@ if __name__ == "__main__":
 
     bootstrap_servers, security_config = parse_bluesky_kafka_config_file(config_file_path=args.kafka_config_file)
     print(f"bootstrap_servers:\n{pformat(bootstrap_servers)}")
-    print(f"security_config:\n{pformat(security_config)}")
 
     consumer_config = {"auto.offset.reset": "latest"}
     consumer_config.update(security_config)
-    print(f"consumer_config:\n{pformat(consumer_config)}")
+    #print(f"consumer_config:\n{pformat(consumer_config)}")
 
     document_to_workflow_dispatcher = RemoteDispatcher(
         topics=[f"{args.beamline_name}.bluesky.runengine.documents"],

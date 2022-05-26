@@ -1,6 +1,6 @@
 import pytest
 
-from prefect_consumer.consumer import get_arg_parser
+from prefect_consumer.message_to_workflow import get_arg_parser
 
 
 def test_config_file_arg():

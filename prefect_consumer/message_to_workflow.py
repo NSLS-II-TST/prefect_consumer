@@ -10,7 +10,7 @@ from nslsii import _read_bluesky_kafka_config_file
 
 def get_arg_parser():
     arg_parser = argparse.ArgumentParser(description="Run a Prefect workflow in response to a Kafka message.")
-    arg_parser.add_argument("beamline_name")
+    arg_parser.add_argument("topics")
     arg_parser.add_argument("flow_id")
     arg_parser.add_argument("prefect_project_name")
     arg_parser.add_argument("--kafka-config-file", required=False, default="/etc/bluesky/kafka.yml")
@@ -37,6 +37,8 @@ def parse_bluesky_kafka_config_file(config_file_path):
 
 if __name__ == "__main__":
     args = get_arg_parser().parse_args()
+
+    topics = args.topics.split()
 
     bootstrap_servers, security_config = parse_bluesky_kafka_config_file(config_file_path=args.kafka_config_file)
     print(f"bootstrap_servers:\n{pformat(bootstrap_servers)}")
